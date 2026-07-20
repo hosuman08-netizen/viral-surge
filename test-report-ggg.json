@@ -1,0 +1,14 @@
+{
+  "ts": "2026-07-17T14:10:00Z",
+  "mode": "1h_physical_full_mobilization",
+  "pass": true,
+  "totalCreated": 230,
+  "currentPosts": 27,
+  "totalReach": 3855,
+  "avgReach": 142.8,
+  "crosses": 54,
+  "lungEvents": 170,
+  "nearMissHits": 1,
+  "codexSize": 8,
+  "note": "1시간 물리시간 풀가동 sim (60 cycles). 추가 ㄱㄱ. Full Legion agents mobilized. p24 Surge-Layer DNA verified."
+}

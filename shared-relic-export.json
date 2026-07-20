@@ -1,0 +1,12 @@
+{
+  "from": "p24-surge-layer",
+  "ts": "2026-07-17T14:10:00Z",
+  "1h_mobilization": true,
+  "relics": [
+    {"type": "ugc_post", "cross": "p20/21/22/23", "count": 230},
+    {"type": "relic_share", "k_boost": 1.25, "count": 50},
+    {"type": "1h_hardcore_export", "reach": 3855, "cross": "p20/21/22/23", "count": 54}
+  ],
+  "lungEvents": 170,
+  "note": "1시간 물리시간 전체 에이전트 풀가동 결과. p24 추가 ㄱㄱ. Codex cross to all Realms. Sovereign direct."
+}

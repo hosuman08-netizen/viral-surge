@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viral Surge • 바이럴 서지</title>
+  <meta name="description" content="포스트 올리고 실시간 반응. 서지 이벤트에서 순위 쟁탈. 재미로 보는 AI 엔터테인먼트.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <header>
+    <h1>Viral Surge</h1>
+    <p class="tag">너의 포스트가 미궁을 흔든다</p>
+    <div class="fomo" id="fomo">다음 서지: 2h 41m • 슬롯 47/50</div>
+    <div id="surgeStatus" style="font-size:0.7rem;color:#c99;margin:4px 0"></div>
+  </header>
+
+  <main>
+    <section id="post">
+      <h2>포스트 올리기</h2>
+      <textarea id="postText" placeholder="짧은 스토리나 선택지... (최대 120자)" maxlength="120"></textarea>
+      <select id="postType">
+        <option value="text">텍스트</option>
+        <option value="choice">선택지</option>
+      </select>
+      <button onclick="createPost()" class="primary-cta">서지 투하</button>
+      <button onclick="autoTestSurge(20)" style="font-size:0.7rem;margin-left:6px">Auto ㄱㄱ Test 20 Posts</button>
+      <button onclick="forceNewSurge()" style="font-size:0.65rem;margin-left:4px">Force New Surge</button>
+      <button onclick="stressTest()" style="font-size:0.65rem;margin-left:4px;background:#c99;color:#111">STRESS ㄱㄱ</button>
+      <button onclick="fullLegionTest()" style="font-size:0.6rem;margin-left:4px">FULL LEGION ㄱㄱ</button>
+      <button onclick="hardcoreLegionStress()" style="font-size:0.6rem;margin-left:4px;background:#e07070;color:#111">HARDCORE ㄱㄱ</button>
+      <button onclick="autoSurgeEvent()" style="font-size:0.6rem;margin-left:4px">Auto Surge Event</button>
+      <button onclick="oneHourFullMobilization()" style="font-size:0.6rem;margin-left:4px;background:#f00;color:#fff">1시간 풀가동 (60min sim)</button>
+      <div style="font-size:0.65rem;opacity:0.6;margin-top:4px">현재 서지: 3시간 제한 • 50 슬롯 • localhost:8765 ㄱㄱ 테스트 (추가 빡세게)</div>
+    </section>
+
+    <section id="feed">
+      <h2>실시간 피드 <span id="reactionTotal"></span></h2>
+      <div id="feedList"></div>
+    </section>
+
+    <section id="ranking">
+      <h2>서지 랭킹 (클랜/그룹)</h2>
+      <div id="rankList"></div>
+      <div style="font-size:0.65rem;opacity:0.6;margin-top:4px">near-miss: top 10 진입 직전 포스트들</div>
+    </section>
+
+    <section id="codex">
+      <h2>서지 기록 — Codex Relic</h2>
+      <div id="codexList"></div>
+      <button onclick="shareSurge()" class="secondary">🌌 릴릭 공유 (cross seed + K)</button>
+      <button onclick="showCodex()" style="font-size:0.65rem;margin-top:4px">Codex 보기</button>
+      <button onclick="exportRelic()" style="font-size:0.65rem;margin-top:2px">Export Relic → p20/21/22/23</button>
+    </section>
+
+    <div id="surprise" style="font-size:0.7rem;color:#e07070;margin:6px 0;min-height:1em"></div>
+    <div id="relicPower" style="font-size:0.6rem;color:#c5a46e;margin:2px 0">Relic Power: 0 (p6 lung)</div>
+  </main>
+
+  <nav class="cross" aria-label="cross">
+    <a href="#" onclick="crossToRealm('p20')">p20 Codex</a>
+    <a href="#" onclick="crossToRealm('p22')">p22 Fate</a>
+    <a href="#" onclick="crossToRealm('p23')">p23 Bond</a>
+  </nav>
+
+  <footer>
+    <small>FICTIONAL ENTERTAINMENT ONLY • NO CASH VALUE • 18+ • Prominent disclosure</small>
+  </footer>
+
+  <script src="lung-surprise-eye.js"></script>
+  <script src="script.js"></script>
+<script>window.LEGION_APP='viral-surge';window.LEGION_ANALYTICS_URL='https://legion-analytics.hoyashi95.workers.dev';</script>
+<script src="legion-beacon.js"></script>
+</body>
+</html>
