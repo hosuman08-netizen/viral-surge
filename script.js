@@ -415,3 +415,6 @@ init();
 
 // 3H daily viral
 (function(){try{var k="viral_d_"+new Date().toISOString().slice(0,10);if(localStorage.getItem(k))return;localStorage.setItem(k,"1");setTimeout(function(){if(window.legionTrack)legionTrack("daily_focus",{});},700);}catch(e){}})();
+
+// GG share UTM
+window.VIRAL_SHARE_BASE=(window.VIRAL_SHARE_BASE||location.origin+location.pathname)+"/?utm_source=share&utm_medium=app";
