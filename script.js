@@ -16,20 +16,46 @@ function todayKey() {
   const d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
+function dayOffsetKey(n) {
+  const d = new Date(); d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function applySurgeStreakShield(s) {
+  if (!s || !s.last) return { s: s || { last: null, count: 0, best: 0 }, froze: false };
+  const t = todayKey();
+  if (s.last === t || s.last === dayOffsetKey(-1)) return { s, froze: false };
+  const missedOne = s.last === dayOffsetKey(-2);
+  const shieldReady = !s.shieldLast || ((new Date(t) - new Date(s.shieldLast)) / 86400000) >= 7;
+  if (missedOne && shieldReady && (s.count || 0) >= 3) {
+    s.shieldLast = t;
+    s.last = dayOffsetKey(-1);
+    try {
+      const tip = document.createElement('div');
+      tip.textContent = '🛡️ 연속 보호막 · ' + s.count + '일 유지';
+      tip.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#16121c;color:#e0b552;padding:10px 16px;border-radius:12px;z-index:9999;font-size:13px;border:1px solid #c5a46e55';
+      document.body.appendChild(tip);
+      setTimeout(function () { tip.remove(); }, 3000);
+    } catch (e) {}
+    if (window.legionTrack) try { legionTrack('streak_freeze', { count: s.count }); } catch (e) {}
+    return { s, froze: true };
+  }
+  return { s, froze: false };
+}
 function bumpStreak() {
   let s;
   try { s = JSON.parse(localStorage.getItem(STREAK_KEY) || '{}'); } catch (e) { s = {}; }
   if (!s || typeof s !== 'object') s = { last: null, count: 0, best: 0 };
   const t = todayKey();
   if (s.last === t) { renderStreak(); return s; }
-  const y = new Date(); y.setDate(y.getDate() - 1);
-  const yk = y.getFullYear() + '-' + String(y.getMonth() + 1).padStart(2, '0') + '-' + String(y.getDate()).padStart(2, '0');
+  const bridged = applySurgeStreakShield(s);
+  s = bridged.s;
+  const yk = dayOffsetKey(-1);
   s.count = (s.last === yk) ? (s.count || 0) + 1 : 1;
   s.best = Math.max(s.best || 0, s.count);
   s.last = t;
   localStorage.setItem(STREAK_KEY, JSON.stringify(s));
   renderStreak();
-  if (window.legionTrack) try { legionTrack('streak', { count: s.count }); } catch (e) {}
+  if (window.legionTrack) try { legionTrack('streak', { count: s.count, froze: !!bridged.froze }); } catch (e) {}
   return s;
 }
 function renderStreak() {
@@ -42,7 +68,10 @@ function renderStreak() {
     return;
   }
   const c = s.count || 0, b = s.best || 0;
-  el.textContent = c + '일 연속 투하 · 포스트 ' + posts.length + '개' + (b > c ? ' · 최장 ' + b + '일' : '');
+  const shieldReady = !s.shieldLast || ((new Date(todayKey()) - new Date(s.shieldLast)) / 86400000) >= 7;
+  el.textContent = c + '일 연속 투하 · 포스트 ' + posts.length + '개'
+    + (b > c ? ' · 최장 ' + b + '일' : '')
+    + (c >= 3 && shieldReady ? ' · 🛡️보호 1회' : '');
 }
 function offerSharePeak(post) {
   const peak = document.getElementById('sharePeak');
@@ -143,8 +172,33 @@ function createPost() {
   showCodex();
   bumpStreak();
   offerSharePeak(post);
+  setTimeout(function () { try { showSurgeMoneyPipe(post); } catch (e) {} }, 700);
   if (window.legionTrack) try { legionTrack('activate', { kind: 'post', reach: post.reactions }); } catch (e) {}
   document.getElementById('postText').value = '';
+}
+
+/** 3H CRO cash hole · 엔터 트랙 */
+function showSurgeMoneyPipe(post) {
+  var host = document.getElementById('feedList') && document.getElementById('feedList').parentNode;
+  host = host || document.body;
+  var el = document.getElementById('moneyPipe');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'moneyPipe';
+    el.style.cssText = 'margin:12px 0;padding:12px;border:1px solid #c5a46e55;border-radius:12px;background:#16121c;text-align:center;font-size:13px';
+    host.insertBefore(el, host.firstChild);
+  }
+  var viral = post && (post.reactions || 0) >= 120;
+  el.innerHTML =
+    '<div style="color:#e0b552;font-weight:700;margin-bottom:6px">' + (viral ? '🌌 바이럴 직후 — 더 멀리' : '💎 서지 더 멀리') + '</div>' +
+    '<p style="opacity:.8;font-size:12px;margin:0 0 8px">엔터테인먼트 · 현금가치 없음 · 18+</p>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">' +
+    '<a style="display:inline-block;padding:8px 12px;border-radius:10px;border:1px solid #c5a46e55;text-decoration:none;color:#ece8f1" href="mailto:hoyashi95@gmail.com?subject=%5BViral%5D%20%ED%9B%84%EC%9B%90">☕ 후원 문의</a>' +
+    '<button type="button" class="secondary" onclick="shareSurge()">📤 릴릭 공유</button>' +
+    '<a style="display:inline-block;padding:8px 12px;border-radius:10px;border:1px solid #c5a46e55;text-decoration:none;color:#e0b552" href="https://hosuman08-netizen.github.io/bond-ai/?utm_source=viral&utm_medium=cross&ref=viral_pipe">💞 Bond</a>' +
+    '<a style="display:inline-block;padding:8px 12px;border-radius:10px;border:1px solid #c5a46e55;text-decoration:none;color:#e0b552" href="https://hosuman08-netizen.github.io/legion-hub/?utm_source=viral&utm_medium=cross&ref=viral_pipe">🎮 Arcade</a>' +
+    '</div>';
+  try { if (window.legionTrack) legionTrack('money_pipe_shown', { app: 'viral', reach: post && post.reactions }); } catch (e) {}
 }
 
 function renderFeed() {
