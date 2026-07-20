@@ -194,12 +194,52 @@ function renderRanking() {
   }).join('') + '</ol>';
 }
 
+function viralKId() {
+  try {
+    var id = localStorage.getItem('viral_k_id');
+    if (!id) { id = 'v' + Math.random().toString(36).slice(2, 8); localStorage.setItem('viral_k_id', id); }
+    return id;
+  } catch (e) { return 'share'; }
+}
+function getViralShareUrl() {
+  var base = 'https://hosuman08-netizen.github.io/viral-surge/';
+  return base + '?utm_source=share&utm_medium=app&ref=' + encodeURIComponent(viralKId());
+}
+function captureViralKRef() {
+  try {
+    var q = new URLSearchParams(location.search || '');
+    var ref = q.get('ref');
+    if (!ref || ref === 'share') return;
+    if (ref === viralKId()) return;
+    if (!localStorage.getItem('viral_k_from')) {
+      localStorage.setItem('viral_k_from', ref);
+      if (window.legionTrack) try { legionTrack('k_link', { from: ref }); } catch (e) {}
+    }
+  } catch (e) {}
+}
 function shareSurge() {
   if (!posts.length) return alert('먼저 포스트 올려.');
   const top = posts[0];
   top.reactions = Math.floor(top.reactions * 1.25);
-  alert('릴릭 공유 → Codex + p20/21/22/23 cross seed 활성화 (+K)');
+  localStorage.setItem('surgePosts', JSON.stringify(posts));
   saveToCodex({action: 'relic_share', reach: top.reactions, cross: 'p20/21/22/23', ts: Date.now()});
+  try {
+    localStorage.setItem('p24_surge_to_p20', JSON.stringify({ reach: top.reactions, text: top.text, ts: Date.now() }));
+    localStorage.setItem('niobe_k_surge', String((parseInt(localStorage.getItem('niobe_k_surge') || '0', 10) || 0) + 1));
+  } catch (e) {}
+  const url = getViralShareUrl();
+  const text = 'Viral Surge · 반응 ' + top.reactions + ' 릴릭 올렸어요 ⚡\n' + (top.text || '').slice(0, 80) + '\n' + url + '\n#ViralSurge';
+  if (window.legionTrack) try { legionTrack('share', { reach: top.reactions }); } catch (e) {}
+  if (navigator.share) {
+    navigator.share({ title: 'Viral Surge', text: text, url: url }).catch(function () {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function () {
+      const s = document.getElementById('surprise');
+      if (s) s.textContent = '공유 문구 복사됨 · Codex cross +K';
+    });
+  } else {
+    alert('릴릭 공유 → cross seed +K\n' + text);
+  }
   renderFeed();
   renderRanking();
   showCodex();
@@ -388,6 +428,7 @@ function exportRelic() {
 }
 
 function init() {
+  captureViralKRef();
   const now = Date.now();
   if (!surgeEnd || now > surgeEnd) {
     surgeEnd = now + (3 * 3600 * 1000);
