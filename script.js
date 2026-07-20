@@ -1,3 +1,6 @@
+
+/* LEGION_WAVE_61_session_counter */
+try{if(!sessionStorage.getItem('lw_p24_viral_su_session_counter')){sessionStorage.setItem('lw_p24_viral_su_session_counter','1');localStorage.setItem('lw_p24_viral_su_session_counter',String((+(localStorage.getItem('lw_p24_viral_su_session_counter')||0))+1));}}catch(e){}
 // p24 Viral Surge — FOMO Scarcity + Social Proof + Variable Reach in Surge-Layer
 // Internal: This is Surge-Layer Echo in Infinite Echo Labyrinth.
 // UGC = Relic that mutates Codex across Realms (p20/21/p22/p23).
