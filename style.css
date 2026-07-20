@@ -7,6 +7,18 @@ header { text-align:center; margin-bottom:calc(var(--grid)*2); }
 h1 { font-size:1.9rem; margin:0; color:var(--gold); }
 .tag { font-size:0.78rem; color:#a38a66; }
 .fomo { background:#15120f; padding:4px 12px; border-radius:999px; display:inline-block; font-size:0.72rem; margin-top:var(--grid); border:1px solid var(--surge); color:#e07070; }
+.streak { margin:6px 0 0; font-size:0.74rem; color:#a38a66; min-height:1.1em; }
+.share-peak { margin-top:10px; padding:10px 12px; border:1px solid var(--surge); border-radius:8px; background:#15120f; text-align:center; }
+.share-peak p { margin:0 0 8px; font-size:0.84rem; color:#e5dcc9; }
+.empty-cta { text-align:center; padding:16px 10px; border:1px dashed #3a2f22; border-radius:8px; color:#a38a66; font-size:0.86rem; }
+.empty-cta button { margin-top:8px; }
+.dev-tools { margin-top:10px; font-size:0.72rem; color:#8b6f47; }
+.dev-tools summary { cursor:pointer; opacity:0.75; }
+.dev-tools-body { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.dev-tools-body button { font-size:0.68rem; padding:4px 8px; background:#1a1510; color:#c5a46e; border:1px solid #3a2f22; border-radius:4px; }
+.foot-nav { display:flex; gap:16px; justify-content:center; margin-bottom:8px; }
+.foot-nav a { color:#8b6f47; font-size:0.72rem; text-decoration:none; }
+.foot-nav a:hover { color:#c5a46e; }
 #surgeStatus { font-size:0.7rem; color:#c99; }
 .post-form { background:#12100d; padding:calc(var(--grid)*1.2); border-radius:8px; border:1px solid #3a2f22; margin-bottom:var(--grid)*2; }
 .post-form textarea { width:100%; min-height:60px; background:#111; color:#ddd; border:1px solid #3a2f22; border-radius:4px; padding:6px; resize:vertical; }

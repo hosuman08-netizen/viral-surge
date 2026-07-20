@@ -13,6 +13,7 @@
     <h1>Viral Surge</h1>
     <p class="tag">너의 포스트가 미궁을 흔든다</p>
     <div class="fomo" id="fomo">다음 서지: 2h 41m • 슬롯 47/50</div>
+    <p class="streak" id="streak" aria-live="polite"></p>
     <div id="surgeStatus" style="font-size:0.7rem;color:#c99;margin:4px 0"></div>
   <p id="rates-line" style="text-align:center;font-size:11px;opacity:.75;margin:8px">확률 예시: LEGEND ~5% · EPIC ~15% · RARE ~30% · COMMON ~50% (가상·변동 가능) · 18+ 엔터테인먼트</p>
   </header>
@@ -26,14 +27,20 @@
         <option value="choice">선택지</option>
       </select>
       <button onclick="createPost()" class="primary-cta">서지 투하</button>
-      <button onclick="autoTestSurge(20)" style="font-size:0.7rem;margin-left:6px">Auto ㄱㄱ Test 20 Posts</button>
-      <button onclick="forceNewSurge()" style="font-size:0.65rem;margin-left:4px">Force New Surge</button>
-      <button onclick="stressTest()" style="font-size:0.65rem;margin-left:4px;background:#c99;color:#111">STRESS ㄱㄱ</button>
-      <button onclick="fullLegionTest()" style="font-size:0.6rem;margin-left:4px">FULL LEGION ㄱㄱ</button>
-      <button onclick="hardcoreLegionStress()" style="font-size:0.6rem;margin-left:4px;background:#e07070;color:#111">HARDCORE ㄱㄱ</button>
-      <button onclick="autoSurgeEvent()" style="font-size:0.6rem;margin-left:4px">Auto Surge Event</button>
-      <button onclick="oneHourFullMobilization()" style="font-size:0.6rem;margin-left:4px;background:#f00;color:#fff">1시간 풀가동 (60min sim)</button>
-      <div style="font-size:0.65rem;opacity:0.6;margin-top:4px">현재 서지: 3시간 제한 • 50 슬롯 • localhost:8765 ㄱㄱ 테스트 (추가 빡세게)</div>
+      <div id="sharePeak" class="share-peak" hidden></div>
+      <details class="dev-tools">
+        <summary>개발·시뮬 도구</summary>
+        <div class="dev-tools-body">
+          <button type="button" onclick="autoTestSurge(20)">Auto 20 Posts</button>
+          <button type="button" onclick="forceNewSurge()">Force New Surge</button>
+          <button type="button" onclick="stressTest()">STRESS</button>
+          <button type="button" onclick="fullLegionTest()">FULL LEGION</button>
+          <button type="button" onclick="hardcoreLegionStress()">HARDCORE</button>
+          <button type="button" onclick="autoSurgeEvent()">Auto Surge Event</button>
+          <button type="button" onclick="oneHourFullMobilization()">1h sim</button>
+        </div>
+      </details>
+      <div style="font-size:0.65rem;opacity:0.6;margin-top:4px">현재 서지: 3시간 제한 · 50 슬롯 · 가상 시뮬</div>
     </section>
 
     <section id="feed">
@@ -66,6 +73,10 @@
   </nav>
 
   <footer>
+    <nav class="foot-nav" aria-label="help">
+      <a href="mailto:hoyashi95@gmail.com?subject=%5BViral%20Surge%5D%20feedback">피드백</a>
+      <a href="https://hosuman08-netizen.github.io/legion-hub/">Arcade</a>
+    </nav>
     <small>FICTIONAL ENTERTAINMENT ONLY • NO CASH VALUE • 18+ • Prominent disclosure</small>
   </footer>
 

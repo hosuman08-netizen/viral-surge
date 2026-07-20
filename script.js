@@ -8,8 +8,54 @@
 let posts = JSON.parse(localStorage.getItem('surgePosts') || '[]');
 let userRank = parseInt(localStorage.getItem('userSurgeRank') || '42');
 const CODEX_KEY = 'surgeCodex';
+const STREAK_KEY = 'surgeStreak';
 let surgeActive = false;
 let surgeEnd = parseInt(localStorage.getItem('surgeEnd') || '0');
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function bumpStreak() {
+  let s;
+  try { s = JSON.parse(localStorage.getItem(STREAK_KEY) || '{}'); } catch (e) { s = {}; }
+  if (!s || typeof s !== 'object') s = { last: null, count: 0, best: 0 };
+  const t = todayKey();
+  if (s.last === t) { renderStreak(); return s; }
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  const yk = y.getFullYear() + '-' + String(y.getMonth() + 1).padStart(2, '0') + '-' + String(y.getDate()).padStart(2, '0');
+  s.count = (s.last === yk) ? (s.count || 0) + 1 : 1;
+  s.best = Math.max(s.best || 0, s.count);
+  s.last = t;
+  localStorage.setItem(STREAK_KEY, JSON.stringify(s));
+  renderStreak();
+  if (window.legionTrack) try { legionTrack('streak', { count: s.count }); } catch (e) {}
+  return s;
+}
+function renderStreak() {
+  const el = document.getElementById('streak');
+  if (!el) return;
+  let s;
+  try { s = JSON.parse(localStorage.getItem(STREAK_KEY) || '{}'); } catch (e) { s = {}; }
+  if (!posts.length) {
+    el.textContent = '아직 포스트 없음 — 첫 서지로 스트릭 시작';
+    return;
+  }
+  const c = s.count || 0, b = s.best || 0;
+  el.textContent = c + '일 연속 투하 · 포스트 ' + posts.length + '개' + (b > c ? ' · 최장 ' + b + '일' : '');
+}
+function offerSharePeak(post) {
+  const peak = document.getElementById('sharePeak');
+  if (!peak || !post) return;
+  const viral = (post.reactions || 0) >= 120;
+  peak.hidden = false;
+  peak.innerHTML = '<p>✨ ' + (viral
+    ? '바이럴 직전/직후 — 지금 공유하면 K가 붙어요'
+    : '포스트가 올랐어요 — 친구에게 한 번 뿌려볼까요?') + '</p>'
+    + '<button type="button" class="primary-cta" onclick="shareSurge();if(window.legionTrack)try{legionTrack(\'share_peak\')}catch(e){}">🌌 릴릭 공유</button> '
+    + '<button type="button" class="secondary" onclick="document.getElementById(\'sharePeak\').hidden=true">나중에</button>';
+  if (window.legionTrack) try { legionTrack('share_peak_shown', { reach: post.reactions || 0 }); } catch (e) {}
+}
 
 const LilithPsych = {
   variableReach(base) {
@@ -95,11 +141,21 @@ function createPost() {
   renderFeed();
   renderRanking();
   showCodex();
+  bumpStreak();
+  offerSharePeak(post);
+  if (window.legionTrack) try { legionTrack('activate', { kind: 'post', reach: post.reactions }); } catch (e) {}
   document.getElementById('postText').value = '';
 }
 
 function renderFeed() {
   const list = document.getElementById('feedList');
+  if (!list) return;
+  if (!posts.length) {
+    list.innerHTML = '<div class="empty-cta"><p>피드가 비어 있어요.<br>첫 포스트를 올리면 서지가 시작됩니다.</p>'
+      + '<button type="button" class="primary-cta" onclick="document.getElementById(\'postText\').focus()">포스트 쓰기</button></div>';
+    document.getElementById('reactionTotal').textContent = '';
+    return;
+  }
   list.innerHTML = posts.slice(0, 8).map(p => `
     <div class="feed-item">
       <div>${p.text} <small style="opacity:0.5">(${p.type})</small></div>
@@ -339,6 +395,7 @@ function init() {
   }
   updateFomo();
   setInterval(updateFomo, 30000); // live FOMO
+  renderStreak();
   renderFeed();
   renderRanking();
   showCodex();
